@@ -7,19 +7,25 @@ import java.io.InputStreamReader;
 
 import java.io.PrintWriter;
 
+import java.io.StringReader;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SocketServer {
     private Agenda agenda;
-    private PersistidorMensaje persistidor;
-    public SocketServer() {
-        agenda = new Agenda();
+    private ManagerMensajes managerMensajes;
+    public SocketServer(Agenda agenda) {
+        this.agenda = agenda;
+        managerMensajes = new ManagerMensajes(agenda);
     }
     
     public void abrirServer() throws IOException {
@@ -34,9 +40,9 @@ public class SocketServer {
                             String aux;
                             String nombre = objectIn.readLine();
                             if (agenda.isUserOnline(nombre)) {
-                                enviarMensaje(nombre, objectIn);
+                                managerMensajes.enviarMensaje(nombre, objectIn.lines().collect(Collectors.joining("\n")));
                             } else { // Persistir mensaje
-                                persistirMensaje(objectIn);
+                                managerMensajes.persistirMensaje(objectIn.lines().collect(Collectors.joining()), false);
                             }
                             soc.close(); // deberian?
                         }
@@ -46,18 +52,6 @@ public class SocketServer {
                     }
                 }
             }.start();
-    }
-    
-    public void enviarMensaje(String nroIP, BufferedReader mensaje) throws IOException {
-        Socket socket = new Socket(nroIP.trim(), Port.Receptor.getValue());
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        out.println(mensaje);
-        out.close();
-        socket.close();
-    }
-    
-    public void persistirMensaje(BufferedReader mensaje) {
-        //persistidor.persistir(mensaje);
     }
     
     public void actualizaListaUsuarios(String nroIPDirectorio, int nroPuertoDirectorio) throws IOException {

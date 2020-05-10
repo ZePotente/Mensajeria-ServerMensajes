@@ -5,9 +5,11 @@ import java.io.IOException;
 public class Sistema {
     private static Sistema sistema;
     private SocketServer server;
+    private Agenda agenda;
     
     private Sistema() {
-        server = new SocketServer();
+        agenda = new Agenda();
+        server = new SocketServer(agenda);
         iniciarServer();
     }
     
