@@ -23,11 +23,11 @@ public class SocketServer {
     }
     
     public void abrirServer(int nroPuerto, int nroPuertoDirectorio) throws IOException {
-        executePeriodUsersRequest(nroPuertoDirectorio);
+        executePeriodUsersRequest(Port.Directorio.getValue());
             new Thread() {
                 public void run() {
                     try {
-                        ServerSocket s = new ServerSocket(nroPuerto);
+                        ServerSocket s = new ServerSocket(Port.ServerMensajes.getValue());
                         while (true) { // una vez que escucha ese puerto se queda escuchandolo aunque ingresen otro puerto
                             Socket soc = s.accept();
                             BufferedReader objectIn = new BufferedReader(new InputStreamReader(soc.getInputStream()));
@@ -49,7 +49,7 @@ public class SocketServer {
     }
     
     public void enviarMensaje(String nroIP, BufferedReader mensaje) throws IOException {
-        Socket socket = new Socket(nroIP.trim(), 123);
+        Socket socket = new Socket(nroIP.trim(), Port.Receptor.getValue());
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         out.println(mensaje);
         out.close();

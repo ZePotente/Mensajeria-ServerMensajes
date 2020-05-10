@@ -20,7 +20,7 @@ public class Sistema {
     
     private void iniciarServer() {
         try {
-            server.abrirServer(Port.Receptor.getValue(), Port.Directorio.getValue());
+            server.abrirServer());
         } catch (IOException e) {
         }
     }
