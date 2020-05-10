@@ -22,7 +22,7 @@ public class SocketServer {
         agenda = new Agenda();
     }
     
-    public void abrirServer(int nroPuerto, int nroPuertoDirectorio) throws IOException {
+    public void abrirServer() throws IOException {
         executePeriodUsersRequest(Port.Directorio.getValue());
             new Thread() {
                 public void run() {

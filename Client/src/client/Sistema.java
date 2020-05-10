@@ -20,7 +20,7 @@ public class Sistema {
     
     private void iniciarServer() {
         try {
-            server.abrirServer());
+            server.abrirServer();
         } catch (IOException e) {
         }
     }

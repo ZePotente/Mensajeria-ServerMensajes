@@ -1,6 +1,7 @@
 package client.Main;
 
 import client.Port;
+import client.Sistema;
 
 public class Main {
     public Main() {
@@ -8,6 +9,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Main main = new Main();
+        Sistema sistema = Sistema.getInstance();
     }
 }
