@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ManagerMensajes {
     private IPersistencia persistidor;
@@ -16,11 +17,12 @@ public class ManagerMensajes {
     
     
     public void enviarMensaje(String nroIP, String mensaje) throws IOException {
-        Socket socket = new Socket(nroIP.trim(), Port.Receptor.getValue());
+        Socket socket;
+        socket = new Socket(nroIP.trim(), Port.Receptor.getValue());
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         out.println(mensaje);
         out.close();
-        socket.close();
+        socket.close(); 
     }
     
     

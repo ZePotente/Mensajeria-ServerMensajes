@@ -23,6 +23,7 @@ public class Sistema {
     private void iniciarServer() {
         try {
             server.abrirServer();
+            server.actualizaListaUsuarios("192.168.0.41", 100);
         } catch (IOException e) {
         }
     }

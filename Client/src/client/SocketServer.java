@@ -37,16 +37,19 @@ public class SocketServer {
                         while (true) { // una vez que escucha ese puerto se queda escuchandolo aunque ingresen otro puerto
                             Socket soc = s.accept();
                             BufferedReader objectIn = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+                            String stringCompleto = objectIn.lines().collect(Collectors.joining("\n"));
                             String aux;
                             String nombre = objectIn.readLine();
                             if (agenda.isUserOnline(nombre)) {
-                                managerMensajes.enviarMensaje(nombre, objectIn.lines().collect(Collectors.joining("\n")));
+                                String nroIP = objectIn.readLine();
+                                managerMensajes.enviarMensaje(nroIP, objectIn.readLine());
                             } else { // Persistir mensaje
-                                managerMensajes.persistirMensaje(objectIn.lines().collect(Collectors.joining()), false);
+                                managerMensajes.persistirMensaje(stringCompleto, false);
                             }
                             soc.close(); // deberian?
                         }
                     } catch (Exception e) {
+                        System.out.println("Fallo");
                     }
                     finally {
                     }
@@ -58,7 +61,7 @@ public class SocketServer {
         Socket socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader objectIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out.println("RequestReceptoresServidor");
+        out.println("RequestReceptores");
                 
         // leida de la lista de receptores
         String lista = objectIn.readLine();
@@ -66,6 +69,7 @@ public class SocketServer {
         objectIn.close();
         out.close();
         agenda.actualizarUsuarios(lista);
+        managerMensajes.chequearMensajesPendientes();
     }
     
     public void executePeriodUsersRequest(int nroPuertoDirectorio) {
@@ -75,7 +79,7 @@ public class SocketServer {
                 @Override
                 public void run() {
                 try {
-                    actualizaListaUsuarios("123", nroPuertoDirectorio);
+                    actualizaListaUsuarios("192.168.0.41", nroPuertoDirectorio);
                 } catch (IOException e) {
                 }
             }
