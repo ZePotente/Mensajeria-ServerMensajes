@@ -1,4 +1,7 @@
-package client;
+package persistencia;
+
+import client.Agenda;
+import client.Port;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,7 +24,6 @@ public class ManagerMensajes {
         socket = new Socket(nroIP.trim(), Port.Receptor.getValue());
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         out.println(mensaje);
-        out.close();
         socket.close(); 
     }
     

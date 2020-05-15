@@ -122,7 +122,7 @@
          <hash n="Default">
             <value n="custom" v="false"/>
             <value n="name" v="Default"/>
-            <url n="targetURL" path="src/Main/Main.java"/>
+            <url n="targetURL" path="src/main/Main.java"/>
          </hash>
       </hash>
    </hash>

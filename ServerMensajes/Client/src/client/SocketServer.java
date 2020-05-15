@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import persistencia.ManagerMensajes;
+
 public class SocketServer {
     private Agenda agenda;
     private ManagerMensajes managerMensajes;
@@ -38,7 +40,7 @@ public class SocketServer {
                             Socket soc = s.accept();
                             BufferedReader objectIn = new BufferedReader(new InputStreamReader(soc.getInputStream()));
                             String stringCompleto = objectIn.lines().collect(Collectors.joining("\n"));
-                            String aux;
+                            //String aux;
                             String nombre = objectIn.readLine();
                             if (agenda.isUserOnline(nombre)) {
                                 String nroIP = objectIn.readLine();
@@ -66,8 +68,6 @@ public class SocketServer {
         // leida de la lista de receptores
         String lista = objectIn.readLine();
         socket.close();
-        objectIn.close();
-        out.close();
         agenda.actualizarUsuarios(lista);
         managerMensajes.chequearMensajesPendientes();
     }
