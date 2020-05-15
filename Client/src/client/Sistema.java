@@ -5,9 +5,11 @@ import java.io.IOException;
 public class Sistema {
     private static Sistema sistema;
     private SocketServer server;
+    private Agenda agenda;
     
     private Sistema() {
-        server = new SocketServer();
+        agenda = new Agenda();
+        server = new SocketServer(agenda);
         iniciarServer();
     }
     
@@ -21,6 +23,7 @@ public class Sistema {
     private void iniciarServer() {
         try {
             server.abrirServer();
+            server.actualizaListaUsuarios("192.168.0.41", 100);
         } catch (IOException e) {
         }
     }
