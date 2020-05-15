@@ -1,0 +1,6 @@
+#ignorar la carpeta .data para evitar quilombos
+#ademas de los archivos que no importa si se modifican.
+ServerMensajes/.data
+ServerMensajes/Client/model
+ServerMensajes/Client/deploy
+ServerMensajes/Client/usuariosDatabase.txt
