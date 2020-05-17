@@ -14,11 +14,10 @@ public class Sistema {
     
     private SocketServer server;
     private Agenda agenda;
-    private String NRO_IP_DIRECTORIO = "";
+    private Configuracion config;
     
     private Sistema() throws NoLecturaConfiguracionException {
-        Configuracion config = LectorConfiguracion.leerConfig(Sistema.ARCH_CONFIG);
-        this.NRO_IP_DIRECTORIO = config.getNroIPDirectorio();
+        config = LectorConfiguracion.leerConfig(Sistema.ARCH_CONFIG);
         agenda = new Agenda();
         server = new SocketServer(agenda);
         iniciarServer();
@@ -37,8 +36,8 @@ public class Sistema {
     
     private void iniciarServer() {
         try {
-            server.abrirServer(this.NRO_IP_DIRECTORIO);
-            server.actualizaListaUsuarios(this.NRO_IP_DIRECTORIO, Port.Directorio.getValue());
+            server.abrirServer(config.getNroIPDirectorio());
+            server.actualizaListaUsuarios(config.getNroIPDirectorio(), Port.Directorio.getValue());
         } catch (IOException e) {
         }
     }
