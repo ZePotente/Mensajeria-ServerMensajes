@@ -30,8 +30,8 @@ public class SocketServer {
         managerMensajes = new ManagerMensajes(agenda);
     }
     
-    public void abrirServer() throws IOException {
-        executePeriodUsersRequest(Port.Directorio.getValue());
+    public void abrirServer(String nroIPDirectorio) throws IOException {
+        executePeriodUsersRequest(nroIPDirectorio, Port.Directorio.getValue());
             new Thread() {
                 public void run() {
                     try {
@@ -72,14 +72,14 @@ public class SocketServer {
         managerMensajes.chequearMensajesPendientes();
     }
     
-    public void executePeriodUsersRequest(int nroPuertoDirectorio) {
+    public void executePeriodUsersRequest(String nroIPDirectorio, int nroPuertoDirectorio) {
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.scheduleAtFixedRate(
             new Runnable() {
                 @Override
                 public void run() {
                 try {
-                    actualizaListaUsuarios("192.168.0.41", nroPuertoDirectorio);
+                    actualizaListaUsuarios(nroIPDirectorio, nroPuertoDirectorio);
                 } catch (IOException e) {
                 }
             }

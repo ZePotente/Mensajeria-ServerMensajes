@@ -37,8 +37,8 @@ public class Sistema {
     
     private void iniciarServer() {
         try {
-            server.abrirServer();
-            server.actualizaListaUsuarios("192.168.0.41", 100);
+            server.abrirServer(this.NRO_IP_DIRECTORIO);
+            server.actualizaListaUsuarios(this.NRO_IP_DIRECTORIO, Port.Directorio.getValue());
         } catch (IOException e) {
         }
     }
