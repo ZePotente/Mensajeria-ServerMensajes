@@ -1,4 +1,4 @@
-package client;
+package persistencia;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,12 +9,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class PersistidorMensaje implements IPersistencia {
+    private static final String NOMBRE_ARCHIVO = "usuariosDatabase.txt";
     public PersistidorMensaje() {
         super();
     }
     
     public void persistir(String mensaje, boolean reemplazarInfoActual) throws IOException {
-        try(FileWriter fw = new FileWriter("usuariosDatabase.txt", !reemplazarInfoActual);
+        try(FileWriter fw = new FileWriter(PersistidorMensaje.NOMBRE_ARCHIVO, !reemplazarInfoActual);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
@@ -25,7 +26,7 @@ public class PersistidorMensaje implements IPersistencia {
     @Override
     public String recuperarPersistencia() {
         String mensajes = "";
-        try (FileReader fr = new FileReader("usuariosDatabase.txt");
+        try (FileReader fr = new FileReader(PersistidorMensaje.NOMBRE_ARCHIVO);
             BufferedReader br = new BufferedReader(fr))
         {
             String st; 
