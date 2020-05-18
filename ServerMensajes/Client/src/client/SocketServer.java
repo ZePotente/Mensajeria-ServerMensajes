@@ -48,15 +48,7 @@ public class SocketServer {
                             String[] stringSplit = stringCompleto.split("\n");
                             ArrayList<String> infoMensaje = new ArrayList<>();
                             Collections.addAll(infoMensaje, stringSplit);
-                            if (stringSplit.length == 3) { // Una linea para nombre, otra IP y otra info del mensaje
-                                String nombre = infoMensaje.get(0);
-                                if (agenda.isUserOnline(nombre)) {
-                                    String nroIP = infoMensaje.get(1);
-                                    managerMensajes.enviarMensaje(infoMensaje);
-                                } else { // Persistir mensaje
-                                    managerMensajes.persistirMensaje(infoMensaje, false);
-                                }
-                            }
+                            manejarEnvioMensaje(infoMensaje);
                             soc.close(); // deberian?
                         }
                     } catch (Exception e) {
@@ -74,7 +66,7 @@ public class SocketServer {
             if (agenda.isUserOnline(nombre)) {
                 managerMensajes.enviarMensaje(infoMensaje);
             } else { // Persistir mensaje
-                managerMensajes.persistirMensaje(infoMensaje, false);
+                managerMensajes.persistirMensaje(infoMensaje, false, false);
             }
         } else if (infoMensaje.size() == 4) { // Mensaje recepcion
             String nombre = infoMensaje.get(0);
@@ -83,7 +75,7 @@ public class SocketServer {
                     managerMensajes.notificarEnvioMensaje(infoMensaje.get(3));
                 }
             } else {
-                managerMensajes.persistirMensaje(infoMensaje, false);
+                managerMensajes.persistirMensaje(infoMensaje, false, true);
             }
         }
     }

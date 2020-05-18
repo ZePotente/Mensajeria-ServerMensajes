@@ -72,7 +72,10 @@ public class ManagerMensajes {
                 }
                 if (agenda.isUserOnline(infoMensaje.get(i))) { // Si esta online, debo enviar el mensaje que estaba persistido
                     ArrayList<String> mensajeAEnviar = new ArrayList<String>(infoMensaje.subList(i, i + 3 + (mensajeRecepcion ? 1 : 0)));
-                    enviarMensaje(mensajeAEnviar);
+                    if (enviarMensaje(mensajeAEnviar) && mensajeRecepcion) {
+                        notificarEnvioMensaje(infoMensaje.get(i+3));
+                        i++;
+                    }
                 } else {
                     if (mensajeRecepcion) {
                         auxListaMensajes.add("Recepcion");
@@ -83,7 +86,7 @@ public class ManagerMensajes {
                     
                 }
             }
-            persistirMensaje(auxListaMensajes, true);
+            persistirMensaje(auxListaMensajes, true, false);
             }
     }
 }
