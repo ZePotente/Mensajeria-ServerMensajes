@@ -2,11 +2,15 @@ package persistencia;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersistidorMensaje implements IPersistencia {
     private static final String NOMBRE_ARCHIVO = "usuariosDatabase.txt";
@@ -14,12 +18,17 @@ public class PersistidorMensaje implements IPersistencia {
         super();
     }
     
-    public void persistir(String mensaje, boolean reemplazarInfoActual) throws IOException {
+    public void persistir(ArrayList<String> mensajes, boolean reemplazarInfoActual) throws IOException {
         try(FileWriter fw = new FileWriter(PersistidorMensaje.NOMBRE_ARCHIVO, !reemplazarInfoActual);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
-            out.println(mensaje);
+            for (int i = 0; i<mensajes.size(); i++) {
+                out.println(mensajes.get(i));
+            }
+            out.close();
+            bw.close();
+            fw.close();
         }
     }
 
@@ -30,9 +39,12 @@ public class PersistidorMensaje implements IPersistencia {
             BufferedReader br = new BufferedReader(fr))
         {
             String st; 
-            while ((st = br.readLine()) != null) 
-                mensajes += st+"\n"; 
-                
+            while ((st = br.readLine()) != null)
+                if (!st.isEmpty()) {
+                    mensajes += st+"\n"; 
+                }
+            br.close();
+            fr.close();
         } catch (IOException e) {
             
         }
