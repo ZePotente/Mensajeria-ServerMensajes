@@ -1,5 +1,7 @@
 package client;
 
+import java.awt.List;
+
 import java.io.BufferedReader;
 
 import java.io.IOException;
@@ -12,6 +14,9 @@ import java.io.StringReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
@@ -40,13 +45,17 @@ public class SocketServer {
                             Socket soc = s.accept();
                             BufferedReader objectIn = new BufferedReader(new InputStreamReader(soc.getInputStream()));
                             String stringCompleto = objectIn.lines().collect(Collectors.joining("\n"));
-                            //String aux;
-                            String nombre = objectIn.readLine();
-                            if (agenda.isUserOnline(nombre)) {
-                                String nroIP = objectIn.readLine();
-                                managerMensajes.enviarMensaje(nroIP, objectIn.readLine());
-                            } else { // Persistir mensaje
-                                managerMensajes.persistirMensaje(stringCompleto, false);
+                            String[] stringSplit = stringCompleto.split("\n");
+                            ArrayList<String> infoMensaje = new ArrayList<>();
+                            Collections.addAll(infoMensaje, stringSplit);
+                            if (stringSplit.length == 3) { // Una linea para nombre, otra IP y otra info del mensaje
+                                String nombre = infoMensaje.get(0);
+                                if (agenda.isUserOnline(nombre)) {
+                                    String nroIP = infoMensaje.get(1);
+                                    managerMensajes.enviarMensaje(infoMensaje);
+                                } else { // Persistir mensaje
+                                    managerMensajes.persistirMensaje(infoMensaje, false);
+                                }
                             }
                             soc.close(); // deberian?
                         }
@@ -84,6 +93,6 @@ public class SocketServer {
                 }
             }
             }, 
-            0, 7, TimeUnit.SECONDS);
+            0, 10, TimeUnit.SECONDS);
     }
 }
