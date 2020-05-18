@@ -1,6 +1,7 @@
 package client;
 
 public enum Port {
+    Emisor(300),
     ServerMensajes(200),
     Directorio(100),
     Receptor(123);

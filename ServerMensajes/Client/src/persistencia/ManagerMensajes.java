@@ -37,8 +37,18 @@ public class ManagerMensajes {
         } 
     }
     
-    public void notificarEnvioMensaje(String nroIP) {
-        // Notificar envio al emisor
+    public void notificarEnvioMensaje(String nombre, String nroIP) {
+        try {
+            Socket socket = new Socket(nroIP.trim(), Port.Emisor.getValue());
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(nombre);
+            
+            socket.close();
+        } catch (UnknownHostException e) {
+            System.out.println("Error al conectar con el emisor.");
+        } catch (IOException e) {
+            System.out.println("Error al enviar una recepcion de mensaje.");
+        }
     }
     
     public void persistirMensaje(ArrayList<String> mensaje, boolean reemplazaListaExistente, boolean isMensajeRecepcion) {
@@ -73,7 +83,7 @@ public class ManagerMensajes {
                 if (agenda.isUserOnline(infoMensaje.get(i))) { // Si esta online, debo enviar el mensaje que estaba persistido
                     ArrayList<String> mensajeAEnviar = new ArrayList<String>(infoMensaje.subList(i, i + 3 + (mensajeRecepcion ? 1 : 0)));
                     if (enviarMensaje(mensajeAEnviar) && mensajeRecepcion) {
-                        notificarEnvioMensaje(infoMensaje.get(i+3));
+                        notificarEnvioMensaje(infoMensaje.get(i), infoMensaje.get(i+3));
                         i++;
                     }
                 } else {
