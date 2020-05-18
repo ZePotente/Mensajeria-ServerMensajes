@@ -68,6 +68,26 @@ public class SocketServer {
             }.start();
     }
     
+    public void manejarEnvioMensaje(ArrayList<String> infoMensaje) {
+        if (infoMensaje.size() == 3) { // Mensaje normal
+            String nombre = infoMensaje.get(0);
+            if (agenda.isUserOnline(nombre)) {
+                managerMensajes.enviarMensaje(infoMensaje);
+            } else { // Persistir mensaje
+                managerMensajes.persistirMensaje(infoMensaje, false);
+            }
+        } else if (infoMensaje.size() == 4) { // Mensaje recepcion
+            String nombre = infoMensaje.get(0);
+            if (agenda.isUserOnline(nombre)) {
+                if (managerMensajes.enviarMensaje(infoMensaje)) {
+                    managerMensajes.notificarEnvioMensaje(infoMensaje.get(3));
+                }
+            } else {
+                managerMensajes.persistirMensaje(infoMensaje, false);
+            }
+        }
+    }
+    
     public void actualizaListaUsuarios(String nroIPDirectorio, int nroPuertoDirectorio) throws IOException {
         Socket socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
