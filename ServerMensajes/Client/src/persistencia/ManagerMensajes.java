@@ -66,7 +66,7 @@ public class ManagerMensajes {
             // La primera linea representa al nombre. La segunda la IP y la tercera info del mensaje. Cada mensaje ocupa 3 lineas
             for (int i = 0; i<infoMensaje.size(); i+=3) {
                 boolean mensajeRecepcion = false;
-                if (infoMensaje.get(0).equalsIgnoreCase("Recepcion")) {
+                if (infoMensaje.get(i).equalsIgnoreCase("Recepcion")) {
                     i++;
                     mensajeRecepcion = true;
                 }
@@ -80,7 +80,7 @@ public class ManagerMensajes {
                     if (mensajeRecepcion) {
                         auxListaMensajes.add("Recepcion");
                     }
-                    for (int j = 0; j < 3 + (mensajeRecepcion ? 1 : 0); i++) {
+                    for (int j = 0; j < 2 + (mensajeRecepcion ? 1 : 0); i++) {
                         auxListaMensajes.add(infoMensaje.get(i));
                     }
                     

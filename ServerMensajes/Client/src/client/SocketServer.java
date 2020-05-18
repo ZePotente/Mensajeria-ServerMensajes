@@ -14,6 +14,8 @@ import java.io.StringReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.net.UnknownHostException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,11 +83,12 @@ public class SocketServer {
     }
     
     public void actualizaListaUsuarios(String nroIPDirectorio, int nroPuertoDirectorio) throws IOException {
-        Socket socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
+        Socket socket;
+        socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader objectIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out.println("RequestReceptores");
-                
+                    
         // leida de la lista de receptores
         String lista = objectIn.readLine();
         socket.close();
@@ -94,17 +97,16 @@ public class SocketServer {
     }
     
     public void executePeriodUsersRequest(String nroIPDirectorio, int nroPuertoDirectorio) {
-        ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
-        es.scheduleAtFixedRate(
-            new Runnable() {
-                @Override
-                public void run() {
+        ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
+        es.scheduleWithFixedDelay(new Runnable() {
+            public void run() {
                 try {
                     actualizaListaUsuarios(nroIPDirectorio, nroPuertoDirectorio);
-                } catch (IOException e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
             }
-            }, 
-            0, 10, TimeUnit.SECONDS);
+        }, 0, 10, TimeUnit.SECONDS);
     }
 }
