@@ -74,7 +74,7 @@ public class SocketServer {
             String nombre = infoMensaje.get(0);
             if (agenda.isUserOnline(nombre)) {
                 if (managerMensajes.enviarMensaje(infoMensaje)) {
-                    managerMensajes.notificarEnvioMensaje(infoMensaje.get(3));
+                    managerMensajes.notificarEnvioMensaje(nombre, infoMensaje.get(3));
                 }
             } else {
                 managerMensajes.persistirMensaje(infoMensaje, false, true);
