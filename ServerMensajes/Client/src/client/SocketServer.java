@@ -14,8 +14,6 @@ import java.io.StringReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import java.net.UnknownHostException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +48,15 @@ public class SocketServer {
                             String[] stringSplit = stringCompleto.split("\n");
                             ArrayList<String> infoMensaje = new ArrayList<>();
                             Collections.addAll(infoMensaje, stringSplit);
-                            manejarEnvioMensaje(infoMensaje);
+                            if (stringSplit.length == 3) { // Una linea para nombre, otra IP y otra info del mensaje
+                                String nombre = infoMensaje.get(0);
+                                if (agenda.isUserOnline(nombre)) {
+                                    String nroIP = infoMensaje.get(1);
+                                    managerMensajes.enviarMensaje(infoMensaje);
+                                } else { // Persistir mensaje
+                                    managerMensajes.persistirMensaje(infoMensaje, false);
+                                }
+                            }
                             soc.close(); // deberian?
                         }
                     } catch (Exception e) {
@@ -62,33 +68,12 @@ public class SocketServer {
             }.start();
     }
     
-    public void manejarEnvioMensaje(ArrayList<String> infoMensaje) {
-        if (infoMensaje.size() == 3) { // Mensaje normal
-            String nombre = infoMensaje.get(0);
-            if (agenda.isUserOnline(nombre)) {
-                managerMensajes.enviarMensaje(infoMensaje);
-            } else { // Persistir mensaje
-                managerMensajes.persistirMensaje(infoMensaje, false, false);
-            }
-        } else if (infoMensaje.size() == 4) { // Mensaje recepcion
-            String nombre = infoMensaje.get(0);
-            if (agenda.isUserOnline(nombre)) {
-                if (managerMensajes.enviarMensaje(infoMensaje)) {
-                    managerMensajes.notificarEnvioMensaje(infoMensaje.get(3));
-                }
-            } else {
-                managerMensajes.persistirMensaje(infoMensaje, false, true);
-            }
-        }
-    }
-    
     public void actualizaListaUsuarios(String nroIPDirectorio, int nroPuertoDirectorio) throws IOException {
-        Socket socket;
-        socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
+        Socket socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader objectIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out.println("RequestReceptores");
-                    
+                
         // leida de la lista de receptores
         String lista = objectIn.readLine();
         socket.close();
@@ -97,16 +82,17 @@ public class SocketServer {
     }
     
     public void executePeriodUsersRequest(String nroIPDirectorio, int nroPuertoDirectorio) {
-        ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
-        es.scheduleWithFixedDelay(new Runnable() {
-            public void run() {
+        ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
+        es.scheduleAtFixedRate(
+            new Runnable() {
+                @Override
+                public void run() {
                 try {
                     actualizaListaUsuarios(nroIPDirectorio, nroPuertoDirectorio);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println(e.getMessage());
+                } catch (IOException e) {
                 }
             }
-        }, 0, 10, TimeUnit.SECONDS);
+            }, 
+            0, 10, TimeUnit.SECONDS);
     }
 }

@@ -1,4 +1,4 @@
-package Main;
+package main;
 
 import client.Sistema;
 
