@@ -1,4 +1,4 @@
-package client;
+package modelo_m;
 
 import java.awt.List;
 
@@ -25,7 +25,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import persistencia.ManagerMensajes;
+import modelo_m.agenda.Agenda;
+
 
 public class SocketServer {
     private Agenda agenda;

@@ -1,4 +1,4 @@
-package client;
+package modelo_m;
 
 public enum Port {
     ServerMensajes(200),

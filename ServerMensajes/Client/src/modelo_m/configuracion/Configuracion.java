@@ -1,4 +1,4 @@
-package configuracion;
+package modelo_m.configuracion;
 
 public class Configuracion {
     private String nroIPDirectorio;
