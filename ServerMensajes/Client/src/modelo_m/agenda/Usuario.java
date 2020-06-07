@@ -1,4 +1,4 @@
-package client;
+package modelo_m.agenda;
 
 public class Usuario {
     private String nombre;

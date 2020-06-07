@@ -1,7 +1,9 @@
-package client;
+package modelo_m.agenda;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import modelo_m.RearmadorLista;
 
 public class Agenda {
     private HashMap<String, Usuario> usuarios = new HashMap<>();

@@ -1,4 +1,4 @@
-package persistencia;
+package modelo_m.persistencia;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

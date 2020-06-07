@@ -1,7 +1,5 @@
-package persistencia;
+package modelo_m;
 
-import client.Agenda;
-import client.Port;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +10,11 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import modelo_m.agenda.Agenda;
+
+import modelo_m.persistencia.IPersistencia;
+import modelo_m.persistencia.PersistidorMensaje;
 
 public class ManagerMensajes {
     private IPersistencia persistidor;
