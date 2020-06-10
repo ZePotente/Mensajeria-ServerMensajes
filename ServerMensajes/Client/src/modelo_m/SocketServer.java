@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import modelo_m.agenda.Agenda;
 
 
-public class SocketServer {
+public class SocketServer implements IInternetManager {
     private Agenda agenda;
     private ManagerMensajes managerMensajes;
     public SocketServer(Agenda agenda) {
