@@ -31,42 +31,46 @@ public class ManagerMensajes {
             out.println(mensaje.get(2));
             socket.close(); 
         } catch (IOException e) {
-            persistirMensaje(mensaje, false);
+            persistirMensaje(mensaje, false, mensaje.size() == 4);
         } 
     }
     
+    private void notificarEnvioDeMensaje() {
+        
+    }
     
-    public void persistirMensaje(ArrayList<String> mensaje, boolean reemplazaListaExistente) {
+    public void persistirMensaje(ArrayList<String> mensaje, boolean reemplazaListaExistente, boolean mensajeAvisoRecepcion) {
         try {
             // Si fallo la ultima persistencia, la cache permite que se guarde cuando llegue un nuevo mensaje y asi no perder ese mensaje
             if (cache != null && !cache.isEmpty()) {
                 mensaje.addAll(cache);
             }
-            persistidor.persistir(mensaje, reemplazaListaExistente);
+            persistidor.persistir(mensaje, reemplazaListaExistente, mensajeAvisoRecepcion);
         } catch (IOException e) {
             cache.addAll(mensaje);
         }
     }
     
-    public void chequearMensajesPendientes() {
-        String mensajes = persistidor.recuperarPersistencia();
+    public void chequearMensajesPendientes(boolean mensajesConAvisoDeRecepcion) {
+        String mensajes = persistidor.recuperarPersistencia(mensajesConAvisoDeRecepcion);
         ArrayList<String> auxListaMensajes = new ArrayList<>();
         if (mensajes != null && !mensajes.isEmpty()) {
             String[] lines = mensajes.split("\n");
             ArrayList<String> infoMensaje = new ArrayList<>();
             Collections.addAll(infoMensaje, lines);
-            // La primera linea representa al nombre. La segunda la IP y la tercera info del mensaje. Cada mensaje ocupa 3 lineas
-            for (int i = 0; i<infoMensaje.size(); i+=3) {
+            // La primera linea representa al nombre. La segunda la IP y la tercera info del mensaje. Cada mensaje ocupa 3 o 4 lineas (dependiendo si es de recepcion)
+            int paso = mensajesConAvisoDeRecepcion ? 4 : 3;
+            for (int i = 0; i<infoMensaje.size(); i+=paso) {
                 if (agenda.isUserOnline(infoMensaje.get(i))) { // Si esta online, debo enviar el mensaje que estaba persistido
-                    ArrayList<String> mensajeAEnviar = new ArrayList<String>(infoMensaje.subList(i, i+3));
+                    ArrayList<String> mensajeAEnviar = new ArrayList<String>(infoMensaje.subList(i, i+paso));
                     enviarMensaje(mensajeAEnviar);
                 } else {
-                    auxListaMensajes.add(infoMensaje.get(i));
-                    auxListaMensajes.add(infoMensaje.get(i+1));
-                    auxListaMensajes.add(infoMensaje.get(i+2));
+                    for (int j=0; j<paso; j++) {
+                        auxListaMensajes.add(infoMensaje.get(i));
+                    }
                 }
             }
-            persistirMensaje(auxListaMensajes, true);
-            }
+            persistirMensaje(auxListaMensajes, true, mensajesConAvisoDeRecepcion);
+        }
     }
 }

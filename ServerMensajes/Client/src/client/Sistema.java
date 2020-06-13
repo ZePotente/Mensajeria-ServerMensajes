@@ -39,6 +39,7 @@ public class Sistema {
             server.abrirServer(config.getNroIPDirectorio());
             server.actualizaListaUsuarios(config.getNroIPDirectorio(), Port.Directorio.getValue());
         } catch (IOException e) {
+            System.out.println("Error al iniciar el servidor");
         }
     }
     

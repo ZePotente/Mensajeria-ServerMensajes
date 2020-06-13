@@ -13,13 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersistidorMensaje implements IPersistencia {
-    private static final String NOMBRE_ARCHIVO = "usuariosDatabase.txt";
+    private static final String NOMBRE_ARCHIVO = "mensajesSinAvisoDeRecepcion";
+    private static final String NOMBRE_ARCHIVO_RECEPCION = "mensajesConAvisoDeRecepcion.txt";
     public PersistidorMensaje() {
         super();
     }
     
-    public void persistir(ArrayList<String> mensajes, boolean reemplazarInfoActual) throws IOException {
-        try(FileWriter fw = new FileWriter(PersistidorMensaje.NOMBRE_ARCHIVO, !reemplazarInfoActual);
+    public void persistir(ArrayList<String> mensajes, boolean reemplazarInfoActual, boolean mensajeAvisoRecepcion) throws IOException {
+        String archivoAEscribir = mensajeAvisoRecepcion ? NOMBRE_ARCHIVO : NOMBRE_ARCHIVO_RECEPCION;
+        try(FileWriter fw = new FileWriter(archivoAEscribir, !reemplazarInfoActual);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
@@ -33,9 +35,10 @@ public class PersistidorMensaje implements IPersistencia {
     }
 
     @Override
-    public String recuperarPersistencia() {
+    public String recuperarPersistencia(boolean mensajesConAvisoDeRecepcion) {
         String mensajes = "";
-        try (FileReader fr = new FileReader(PersistidorMensaje.NOMBRE_ARCHIVO);
+        String archivoALeer = mensajesConAvisoDeRecepcion ? NOMBRE_ARCHIVO : NOMBRE_ARCHIVO_RECEPCION;
+        try (FileReader fr = new FileReader(archivoALeer);
             BufferedReader br = new BufferedReader(fr))
         {
             String st; 
