@@ -1,6 +1,6 @@
 package main;
 
-import client.Sistema;
+import modelo_m.SistemaM;
 
 public class Main {
     public Main() {
@@ -8,6 +8,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Sistema sistema = Sistema.getInstance();
+        SistemaM sistema = SistemaM.getInstance();
     }
 }
