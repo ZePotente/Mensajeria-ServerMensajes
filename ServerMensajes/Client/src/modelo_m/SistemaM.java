@@ -38,9 +38,10 @@ public class SistemaM {
     
     private void iniciarServer() {
         try {
-            server.abrirServer(config.getNroIPDirectorio());
-            server.actualizaListaUsuarios(config.getNroIPDirectorio(), Port.Directorio.getValue());
+            server.abrirServer(config.getNroIPDir1());
+            server.actualizaListaUsuarios(config.getNroIPDir1(), config.getPuertoDir1());
         } catch (IOException e) {
+            System.out.println("Error al iniciar el servidor.");
         }
     }
     

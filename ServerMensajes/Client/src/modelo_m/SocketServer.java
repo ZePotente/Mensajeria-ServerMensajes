@@ -41,8 +41,10 @@ public class SocketServer implements IInternetManager {
             new Thread() {
                 public void run() {
                     try {
+                        System.out.println("Abriendo sv.");
                         ServerSocket s = new ServerSocket(Port.ServerMensajes.getValue());
                         while (true) { // una vez que escucha ese puerto se queda escuchandolo aunque ingresen otro puerto
+                            System.out.println("Esperando conexion.");
                             Socket soc = s.accept();
                             BufferedReader objectIn = new BufferedReader(new InputStreamReader(soc.getInputStream()));
                             String stringCompleto = objectIn.lines().collect(Collectors.joining("\n"));
@@ -88,8 +90,10 @@ public class SocketServer implements IInternetManager {
                 @Override
                 public void run() {
                 try {
+                    System.out.println("Por actualizar lista.");
                     actualizaListaUsuarios(nroIPDirectorio, nroPuertoDirectorio);
                 } catch (IOException e) {
+                    System.out.println("Error al actualizar la lista.");
                 }
             }
             }, 
