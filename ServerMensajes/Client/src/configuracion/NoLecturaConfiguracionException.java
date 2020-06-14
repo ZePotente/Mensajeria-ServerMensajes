@@ -1,4 +1,4 @@
-package modelo_m.configuracion;
+package configuracion;
 
 public class NoLecturaConfiguracionException extends Exception {
     public NoLecturaConfiguracionException(String string, Throwable throwable, boolean b, boolean b1) {

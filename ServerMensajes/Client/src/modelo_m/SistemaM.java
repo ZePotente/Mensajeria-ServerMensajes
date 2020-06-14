@@ -2,24 +2,24 @@ package modelo_m;
 
 import modelo_m.agenda.Agenda;
 
-import modelo_m.configuracion.Configuracion;
+import configuracion.Configuracion;
 
-import modelo_m.configuracion.LectorConfiguracion;
+import configuracion.LectorConfiguracion;
 
-import modelo_m.configuracion.NoLecturaConfiguracionException;
+import configuracion.NoLecturaConfiguracionException;
 
 import java.io.IOException;
 
 public class SistemaM {
     private static SistemaM sistema;
-    private static String ARCH_CONFIG = "configuracion.txt";
+    private static String ARCHIVO_CONFIG = "configuracion.txt";
     
     private SocketServer server;
     private Agenda agenda;
     private Configuracion config;
     
     private SistemaM() throws NoLecturaConfiguracionException {
-        config = LectorConfiguracion.leerConfig(SistemaM.ARCH_CONFIG);
+        config = LectorConfiguracion.leerConfig(ARCHIVO_CONFIG);
         agenda = new Agenda();
         server = new SocketServer(agenda);
         iniciarServer();
