@@ -36,8 +36,8 @@ public class SocketServer implements IInternetManager {
         managerMensajes = new ManagerMensajes(agenda);
     }
     
-    public void abrirServer(String nroIPDirectorio) throws IOException {
-        executePeriodUsersRequest(nroIPDirectorio, Port.Directorio.getValue());
+    public void abrirServer() throws IOException {
+        executePeriodUsersRequest(SistemaM.getInstance().getConfig().getNroIPDir1(), Port.Directorio.getValue());
             new Thread() {
                 public void run() {
                     try {

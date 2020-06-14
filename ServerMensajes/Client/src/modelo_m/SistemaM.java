@@ -22,7 +22,6 @@ public class SistemaM {
         config = LectorConfiguracion.leerConfig(ARCHIVO_CONFIG);
         agenda = new Agenda();
         server = new SocketServer(agenda);
-        iniciarServer();
     }
     
     public static synchronized SistemaM getInstance() {
@@ -36,14 +35,15 @@ public class SistemaM {
         return sistema;
     } 
     
-    private void iniciarServer() {
+    public void iniciarServer() {
         try {
-            server.abrirServer(config.getNroIPDir1());
-            server.actualizaListaUsuarios(config.getNroIPDir1(), config.getPuertoDir1());
+            server.abrirServer();
         } catch (IOException e) {
             System.out.println("Error al iniciar el servidor.");
         }
     }
-    
-    
+
+    public Configuracion getConfig() {
+        return config;
+    }
 }
