@@ -49,21 +49,19 @@ public class SocketServer implements IInternetManager {
                             String[] stringSplit = stringCompleto.split("\n");
                             ArrayList<String> infoMensaje = new ArrayList<>();
                             Collections.addAll(infoMensaje, stringSplit);
-                            if (stringSplit.length == 3) { // Una linea para nombre, otra IP y otra info del mensaje
+                            if (stringSplit.length == 3 || stringSplit.length == 4) { // Una linea para nombre, otra IP y otra info del mensaje
                                 String nombre = infoMensaje.get(0);
                                 if (agenda.isUserOnline(nombre)) {
                                     String nroIP = infoMensaje.get(1);
                                     managerMensajes.enviarMensaje(infoMensaje);
                                 } else { // Persistir mensaje
-                                    managerMensajes.persistirMensaje(infoMensaje, false);
+                                    managerMensajes.persistirMensaje(infoMensaje, false, stringSplit.length == 4);
                                 }
                             }
-                            soc.close(); // deberian?
+                            soc.close();
                         }
                     } catch (Exception e) {
                         System.out.println("Fallo");
-                    }
-                    finally {
                     }
                 }
             }.start();
@@ -79,7 +77,8 @@ public class SocketServer implements IInternetManager {
         String lista = objectIn.readLine();
         socket.close();
         agenda.actualizarUsuarios(lista);
-        managerMensajes.chequearMensajesPendientes();
+        managerMensajes.chequearMensajesPendientes(false); // Chequea mensajes pendientes sin recepcion
+        managerMensajes.chequearMensajesPendientes(true);  // Chequea mensajes pendientes con recepcion
     }
     
     public void executePeriodUsersRequest(String nroIPDirectorio, int nroPuertoDirectorio) {
