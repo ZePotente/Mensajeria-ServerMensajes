@@ -37,7 +37,7 @@ public class SocketServer implements IInternetManager {
     }
     
     public void abrirServer() throws IOException {
-        executePeriodUsersRequest(SistemaM.getInstance().getConfig().getNroIPDir1(), Port.Directorio.getValue());
+        executePeriodUsersRequest();
             new Thread() {
                 public void run() {
                     try {
@@ -69,6 +69,16 @@ public class SocketServer implements IInternetManager {
             }.start();
     }
     
+    //Ahora solo se tira excepcion si no pudo conectar con ninguno
+    public void actualizaListaUsuarios() throws IOException {
+        //acopladisimo, pero igual no es una componente aparte.
+        try {
+            actualizaListaUsuarios(SistemaM.getInstance().getConfig().getNroIPDir1(), SistemaM.getInstance().getConfig().getPuertoDir1());
+        } catch (IOException e) {
+            actualizaListaUsuarios(SistemaM.getInstance().getConfig().getNroIPDir2(), SistemaM.getInstance().getConfig().getPuertoDir2());
+        }
+    }
+    
     public void actualizaListaUsuarios(String nroIPDirectorio, int nroPuertoDirectorio) throws IOException {
         Socket socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -83,7 +93,7 @@ public class SocketServer implements IInternetManager {
         managerMensajes.chequearMensajesPendientes(true);  // Chequea mensajes pendientes con recepcion
     }
     
-    public void executePeriodUsersRequest(String nroIPDirectorio, int nroPuertoDirectorio) {
+    public void executePeriodUsersRequest() {
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.scheduleAtFixedRate(
             new Runnable() {
@@ -91,7 +101,7 @@ public class SocketServer implements IInternetManager {
                 public void run() {
                 try {
                     System.out.println("Por actualizar lista.");
-                    actualizaListaUsuarios(nroIPDirectorio, nroPuertoDirectorio);
+                    actualizaListaUsuarios();
                 } catch (IOException e) {
                     System.out.println("Error al actualizar la lista.");
                 }
