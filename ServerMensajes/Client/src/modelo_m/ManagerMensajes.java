@@ -33,22 +33,26 @@ public class ManagerMensajes {
             out.println(mensaje.get(2));
             socket.close(); 
             if (mensaje.size() == 4) { // Mensaje con aviso de recepcion
-                notificarEnvioDeMensaje(mensaje.get(3)); // Numero de IP del emisor
+                notificarEnvioDeMensaje(mensaje.get(3), mensaje.get(0)); // Numero de IP del emisor
             }
         } catch (IOException e) {
             persistirMensaje(mensaje, false, mensaje.size() == 4);
         } 
     }
     
-    private void notificarEnvioDeMensaje(String nroIP) {
+    private void notificarEnvioDeMensaje(String nroIP, String nombre) {
         Socket socket;
         try {
             // Aca poner bien el puerto para notificar el envio y el mensaje a enviar tambien
-            socket = new Socket(nroIP.trim(), 123);
+            socket = new Socket(nroIP.trim(), Port.EmisorRecepcion.getValue());
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("Mensaje enviado");
+            out.println(nombre);
             socket.close();
         } catch (IOException e) {
+            System.out.println("Fallo en el envio de notificacion de mensaje.");
+            e.printStackTrace();
+            System.out.println(nombre);
+            System.out.println(nroIP);
         }
     }
     
