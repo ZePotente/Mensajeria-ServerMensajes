@@ -36,13 +36,15 @@ public class SocketServer implements IInternetManager {
         managerMensajes = new ManagerMensajes(agenda);
     }
     
-    public void abrirServer(String nroIPDirectorio) throws IOException {
-        executePeriodUsersRequest(nroIPDirectorio, Port.Directorio.getValue());
+    public void abrirServer() throws IOException {
+        executePeriodUsersRequest();
             new Thread() {
                 public void run() {
                     try {
+                        System.out.println("Abriendo sv.");
                         ServerSocket s = new ServerSocket(Port.ServerMensajes.getValue());
                         while (true) { // una vez que escucha ese puerto se queda escuchandolo aunque ingresen otro puerto
+                            System.out.println("Esperando conexion.");
                             Socket soc = s.accept();
                             BufferedReader objectIn = new BufferedReader(new InputStreamReader(soc.getInputStream()));
                             String stringCompleto = objectIn.lines().collect(Collectors.joining("\n"));
@@ -67,6 +69,16 @@ public class SocketServer implements IInternetManager {
             }.start();
     }
     
+    //Ahora solo se tira excepcion si no pudo conectar con ninguno
+    public void actualizaListaUsuarios() throws IOException {
+        //acopladisimo, pero igual no es una componente aparte.
+        try {
+            actualizaListaUsuarios(SistemaM.getInstance().getConfig().getNroIPDir1(), SistemaM.getInstance().getConfig().getPuertoDir1());
+        } catch (IOException e) {
+            actualizaListaUsuarios(SistemaM.getInstance().getConfig().getNroIPDir2(), SistemaM.getInstance().getConfig().getPuertoDir2());
+        }
+    }
+    
     public void actualizaListaUsuarios(String nroIPDirectorio, int nroPuertoDirectorio) throws IOException {
         Socket socket = new Socket(nroIPDirectorio.trim(), nroPuertoDirectorio);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -81,15 +93,17 @@ public class SocketServer implements IInternetManager {
         managerMensajes.chequearMensajesPendientes(true);  // Chequea mensajes pendientes con recepcion
     }
     
-    public void executePeriodUsersRequest(String nroIPDirectorio, int nroPuertoDirectorio) {
+    public void executePeriodUsersRequest() {
         ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor();
         es.scheduleAtFixedRate(
             new Runnable() {
                 @Override
                 public void run() {
                 try {
-                    actualizaListaUsuarios(nroIPDirectorio, nroPuertoDirectorio);
+                    System.out.println("Por actualizar lista.");
+                    actualizaListaUsuarios();
                 } catch (IOException e) {
+                    System.out.println("Error al actualizar la lista.");
                 }
             }
             }, 

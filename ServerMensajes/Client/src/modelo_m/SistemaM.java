@@ -2,27 +2,26 @@ package modelo_m;
 
 import modelo_m.agenda.Agenda;
 
-import modelo_m.configuracion.Configuracion;
+import configuracion.Configuracion;
 
-import modelo_m.configuracion.LectorConfiguracion;
+import configuracion.LectorConfiguracion;
 
-import modelo_m.configuracion.NoLecturaConfiguracionException;
+import configuracion.NoLecturaConfiguracionException;
 
 import java.io.IOException;
 
 public class SistemaM {
     private static SistemaM sistema;
-    private static String ARCH_CONFIG = "configuracion.txt";
+    private static String ARCHIVO_CONFIG = "configuracion.txt";
     
     private SocketServer server;
     private Agenda agenda;
     private Configuracion config;
     
     private SistemaM() throws NoLecturaConfiguracionException {
-        config = LectorConfiguracion.leerConfig(SistemaM.ARCH_CONFIG);
+        config = LectorConfiguracion.leerConfig(ARCHIVO_CONFIG);
         agenda = new Agenda();
         server = new SocketServer(agenda);
-        iniciarServer();
     }
     
     public static synchronized SistemaM getInstance() {
@@ -36,13 +35,15 @@ public class SistemaM {
         return sistema;
     } 
     
-    private void iniciarServer() {
+    public void iniciarServer() {
         try {
-            server.abrirServer(config.getNroIPDirectorio());
-            server.actualizaListaUsuarios(config.getNroIPDirectorio(), Port.Directorio.getValue());
+            server.abrirServer();
         } catch (IOException e) {
+            System.out.println("Error al iniciar el servidor.");
         }
     }
-    
-    
+
+    public Configuracion getConfig() {
+        return config;
+    }
 }
