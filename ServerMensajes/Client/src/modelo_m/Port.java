@@ -1,8 +1,9 @@
 package modelo_m;
 
 public enum Port {
+    Receptor(123),
     ServerMensajes(200),
-    Receptor(123);
+    EmisorRecepcion(300);
     
     private final int value;
     
